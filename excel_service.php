@@ -1,7 +1,5 @@
 <?php
 
-require_once 'excel_lib/PHPExcel.php';
-
 /*
  * 从excel中导出表头
  * @param string $fileName excel的文件名
@@ -19,7 +17,7 @@ function getExcelHeader($fileName, $row = 1)
         $objPHPExcel = $excel->load($fileName);
         $sheet = $objPHPExcel->getSheet(0);
     } catch (Exception $e) {
-        return false;
+        die("open file <{$fileName}> fail");
     }
 
     $allColumn = $sheet->getHighestColumn();
@@ -50,7 +48,7 @@ function getExcelContent($fileName, $header, $start = 2, $limit = 0)
         $objPHPExcel = $excel->load($fileName);
         $sheet = $objPHPExcel->getSheet(0);
     } catch (Exception $e) {
-        return false;
+        die("open file <{$fileName}> fail");
     }
 
     $allRow = $sheet->getHighestRow();

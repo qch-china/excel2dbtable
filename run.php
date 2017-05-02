@@ -2,6 +2,7 @@
 
 header("Content-Type: text/html;charset=utf-8");
 
+require_once 'vendor/autoload.php';
 require_once 'mysql_service.php';
 require_once 'excel_service.php';
 
@@ -16,7 +17,7 @@ if ($config['drop_table'] == true) {
     my_write($mysqli, "drop table if exists `{$table_name}`;");
 }
 
-$excel_name = 'excel_file/'.$config['excel_name'];
+$excel_name = $config['excel_name'];
 
 $header = getExcelHeader($excel_name);
 

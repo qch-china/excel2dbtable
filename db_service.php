@@ -65,6 +65,10 @@ class db_service
      */
     public function insert_record($table_name, $data)
     {
+        if (empty($data)) {
+            return -1;
+        }
+
         $field_str = '';
         $value_str = '';
         foreach ($data as $key => $value) {
@@ -81,6 +85,39 @@ class db_service
             die($this->_mysqli->error);
         }
         return $this->_mysqli->insert_id;
+    }
+
+    public function insert_multi_record($table_name, $data)
+    {
+        if (empty($data)) {
+            return -1;
+        }
+
+        $field_str = '';
+        $value_str = '';
+
+        $field_list = array();
+        foreach ($data[0] as $key => $value) {
+            $field_str .= "`{$key}`, ";
+            $field_list[] = $key;
+        }
+        $field_str = substr($field_str, 0, -2);
+
+        foreach ($data as $item) {
+            $tsql = '';
+            foreach ($item as $key => $value) {
+                $value = $this->_mysqli->real_escape_string($value);
+                $tsql .= "'{$value}', ";
+            }
+            $tsql = substr($tsql, 0, -2);
+            $value_str .= "({$tsql}), ";
+        }
+
+        $value_str = substr($value_str, 0, -2);
+        $sql = "INSERT INTO `{$table_name}`({$field_str}) VALUES {$value_str};";
+
+        return $this->write_data($sql);
+
     }
 
     /**
